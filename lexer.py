@@ -3,6 +3,7 @@
 import sys
 from dataclasses import dataclass
 from enum import Enum
+import re
 
 def lexer(code):
     tokens = []
@@ -33,10 +34,25 @@ def lexer(code):
                     break
                 y+=1
             if not end_quote:
-                print("Error: Unterminated string literal")
+                print("Error: Unterminated string literal at index", x)
                 sys.exit(1)
             tokens.append(Token(TokenType.StringLiteral, code[x:y+1], x))
             x = y
+        elif code[x].isalnum() or code[x] == "_" or code[x] == ".":
+            y = x
+            while y < len(code) and (code[y].isalnum() or code[y] == "_" or code[y] == "."):
+                y+=1
+            word = code[x:y]
+            if word in ["use","fun"]:
+                tokens.append(Token(TokenType.Keyword, word, x))
+            elif is_number_literal(word):
+                tokens.append(Token(TokenType.Num, word, x))
+            elif word.isalnum() or "_" in word and not word[0].isdigit() and "." not in word:
+                tokens.append(Token(TokenType.Identifier, word, x))
+            else:
+                print(f"Error: Invalid token '{word}' at index {x}")
+                sys.exit(1)    
+            x = y-1    
         elif code[x] == "(":
             tokens.append(Token(TokenType.LeftParen, "(",x))
         elif code[x] == ")":
@@ -72,3 +88,6 @@ class TokenType(Enum):
     RightBrace = 8
     Comma = 9
     Semicolon = 10
+
+def is_number_literal(s):
+    return bool(re.fullmatch(r"(0|[1-9]\d*)(\.\d+)?", s))
