@@ -19,10 +19,10 @@ def compile(filename):
 
     #parsing
     ast = parser(tokens,code)
-    pretty_print(ast)
+    # pretty_print(ast)
 
     #semantic analysis
-    # semantic_analyzer(ast,code)
+    semantic_analyzer(ast,code)
 
     # #code generation
     # output_c_code = code_gen(ast)
