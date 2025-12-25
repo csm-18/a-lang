@@ -1,5 +1,6 @@
 # lexical analysis for a-lang
 
+import sys
 from dataclasses import dataclass
 from enum import Enum
 
@@ -22,6 +23,20 @@ def lexer(code):
                 continue
             else:
                 return tokens
+
+        elif code[x] == '"':
+            end_quote = False
+            y = x+1
+            while y < len(code):
+                if code[y] == '"' and code[y-1] != "\\":
+                    end_quote = True
+                    break
+                y+=1
+            if not end_quote:
+                print("Error: Unterminated string literal")
+                sys.exit(1)
+            tokens.append(Token(TokenType.StringLiteral, code[x:y+1], x))
+            x = y
         elif code[x] == "(":
             tokens.append(Token(TokenType.LeftParen, "(",x))
         elif code[x] == ")":
