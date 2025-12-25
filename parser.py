@@ -1,18 +1,19 @@
 # parsing (AST creation) for a-lang
 
-from enum import Enum
+from enum import Enum, auto
+from dataclasses import dataclass
 from lexer import Token, TokenType, line_col_from_index
 import sys
 
 def parser(tokens,code):
-    ast = RootNode()
+    ast = RootNode(type=NodeType.ROOT, children=[])
 
     ast_children = []
     x = 0
     while x < len(tokens):
         if tokens[x].type == TokenType.Keyword and tokens[x].value == "use":
             if x+2 < len(tokens) and tokens[x+1].type == TokenType.Identifier and tokens[x+2].type == TokenType.Semicolon:
-                import_node = ImportStatementNode(tokens[x+1].value, "built-in", tokens[x].index)
+                import_node = ImportStatementNode(NodeType.IMPORT_STATEMENT ,tokens[x+1].value, "built-in", tokens[x].index)
                 ast_children.append(import_node)
                 x += 3
                 continue
@@ -22,14 +23,14 @@ def parser(tokens,code):
                 sys.exit(1) 
         elif tokens[x].type == TokenType.Keyword and tokens[x].value == "fun":
             if x+4 < len(tokens) and tokens[x+1].type == TokenType.Identifier and tokens[x+1].value == "main" and tokens[x+2].type == TokenType.LeftParen and tokens[x+3].type == TokenType.RightParen and tokens[x+4].type == TokenType.LeftBrace:
-                main_fun_node = MainFunctionNode([], tokens[x].index)
+                main_fun_node = MainFunctionNode(NodeType.MAIN_FUNCTION,[], tokens[x].index)
                 
                 main_fun_node_body = []
                 y = x + 5
                 while y < len(tokens):
                     # look for print statements
                     if tokens[y].type == TokenType.Identifier and tokens[y].value == "print" and y+4 < len(tokens) and tokens[y+1].type == TokenType.LeftParen and tokens[y+2].type == TokenType.StringLiteral and tokens[y+3].type == TokenType.RightParen and tokens[y+4].type == TokenType.Semicolon:
-                        print_node = PrintStatementNode(StringLiteralNode(tokens[y+2].value, tokens[y+2].index), tokens[y].index)
+                        print_node = PrintStatementNode(NodeType.PRINT_STATEMENT,StringLiteralNode(NodeType.STRING_LITERAL,tokens[y+2].value, tokens[y+2].index), tokens[y].index)
                         main_fun_node_body.append(print_node)    
                         y += 5
                         continue
@@ -70,6 +71,7 @@ def parser(tokens,code):
     ast.children = ast_children
     return ast
 
+@dataclass
 class ASTNode:
     """Base AST node providing serialization and repr helpers."""
     type = "node"
@@ -94,40 +96,52 @@ class ASTNode:
 
 
 class RootNode(ASTNode):
-    type = "root"
+    type = 'NodeType'
 
-    def __init__(self, children=None):
+    def __init__(self,type, children=None):
+        self.type = type
         self.children = children if children is not None else []
 
 
 class ImportStatementNode(ASTNode):
-    type = "import_statement"
+    type = 'NodeType'
 
-    def __init__(self, module_name, module_type, start_index):
+    def __init__(self, type,module_name, module_type, start_index):
+        self.type = type
         self.module_name = module_name
         self.module_type = module_type
         self.start_index = start_index
 
 class MainFunctionNode(ASTNode):
-    type = "main_function"
+    type = 'NodeType'
 
-    def __init__(self, body, start_index):
+    def __init__(self,type, body, start_index):
+        self.type = type
         self.body = body
         self.start_index = start_index        
 
 class PrintStatementNode(ASTNode):
-    type = "print_statement"
+    type: 'NodeType'
 
-    def __init__(self, message, start_index):
+    def __init__(self,type, message, start_index):
+        self.type = type
         self.message = message
         self.start_index = start_index
 
 class StringLiteralNode(ASTNode):
-    type = "string_literal"
+    type: 'NodeType'
 
-    def __init__(self, value, start_index):
+    def __init__(self,type, value, start_index):
+        self.type = type
         self.value = value
         self.start_index = start_index
+
+class NodeType(Enum):
+    ROOT = auto()
+    IMPORT_STATEMENT = auto()
+    MAIN_FUNCTION = auto()
+    PRINT_STATEMENT = auto()
+    STRING_LITERAL = auto()
 
 def pretty_print(node, indent=0):
     """Recursively print AST nodes in a human-friendly tree format."""

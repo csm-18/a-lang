@@ -5,6 +5,7 @@ import sys
 import subprocess
 from lexer import lexer
 from parser import parser, pretty_print
+from semantic_analyzer import semantic_analyzer
 from code_gen import code_gen
 
 #compile a c file into binary
@@ -20,8 +21,8 @@ def compile(filename):
     ast = parser(tokens,code)
     pretty_print(ast)
 
-    # #semantic analysis
-    # semantic_analysis(ast)
+    #semantic analysis
+    # semantic_analyzer(ast,code)
 
     # #code generation
     # output_c_code = code_gen(ast)
