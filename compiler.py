@@ -3,9 +3,8 @@
 import os
 import sys
 import subprocess
-from pprint import pprint
 from lexer import lexer
-from parser import parser
+from parser import parser, pretty_print
 from code_gen import code_gen
 
 #compile a c file into binary
@@ -15,10 +14,14 @@ def compile(filename):
 
     #lexical analysis
     tokens = lexer(code)
-    pprint(tokens)
+    # pprint(tokens)
 
-    # #parsing
-    # ast = parser(tokens)
+    #parsing
+    ast = parser(tokens)
+    pretty_print(ast)
+
+    # #semantic analysis
+    # semantic_analysis(ast)
 
     # #code generation
     # output_c_code = code_gen(ast)
