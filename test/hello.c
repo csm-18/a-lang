@@ -1,6 +1,8 @@
 #include <stdio.h>
 
-int main(int argc,char* argv[]){
+int main() {
     puts("hello world!");
+    puts("hello world!");
+
     return 0;
 }

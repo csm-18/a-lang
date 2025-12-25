@@ -26,16 +26,16 @@ def compile(filename):
 
     #code generation
     output_c_code = code_gen(ast,symbol_table)
-    print(output_c_code)
+    # print(output_c_code)
 
-    # #create output c file
-    # output_c_filename = filename[:-1] + "c"
-    # with open(output_c_filename, "w", encoding="utf-8") as f:
-    #     f.write(output_c_code)
+    #create output c file
+    output_c_filename = filename[:-1] + "c"
+    with open(output_c_filename, "w", encoding="utf-8") as f:
+        f.write(output_c_code)
 
-    # #build the c file
-    # try: 
-    #     subprocess.run(["gcc", output_c_filename, "-o", output_c_filename[:-2]], check=True)
-    # except:
-    #     print("Error while building!")
-    #     sys.exit(1)
+    #build the c file
+    try: 
+        subprocess.run(["gcc", output_c_filename, "-o", output_c_filename[:-2]], check=True)
+    except:
+        print("Error while building!")
+        sys.exit(1)
