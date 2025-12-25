@@ -34,7 +34,8 @@ def lexer(code):
                     break
                 y+=1
             if not end_quote:
-                print("Error: Unterminated string literal at index", x)
+                line, col = line_col_from_index(code, x)
+                print(f"Error: Unterminated string literal starting at line {line}, column {col}")
                 sys.exit(1)
             tokens.append(Token(TokenType.StringLiteral, code[x:y+1], x))
             x = y
@@ -50,7 +51,8 @@ def lexer(code):
             elif word.isalnum() or "_" in word and not word[0].isdigit() and "." not in word:
                 tokens.append(Token(TokenType.Identifier, word, x))
             else:
-                print(f"Error: Invalid token '{word}' at index {x}")
+                line, col = line_col_from_index(code, x)
+                print(f"Error: Invalid token '{word}' at line {line}, column {col}")
                 sys.exit(1)    
             x = y-1    
         elif code[x] == "(":
@@ -91,3 +93,14 @@ class TokenType(Enum):
 
 def is_number_literal(s):
     return bool(re.fullmatch(r"(0|[1-9]\d*)(\.\d+)?", s))
+
+def line_col_from_index(code, index):
+    line = 1
+    col = 1
+    for i in range(index):
+        if code[i] == "\n":
+            line += 1
+            col = 1
+        else:
+            col += 1
+    return line, col
