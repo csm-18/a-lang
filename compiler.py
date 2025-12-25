@@ -17,7 +17,7 @@ def compile(filename):
     # pprint(tokens)
 
     #parsing
-    ast = parser(tokens)
+    ast = parser(tokens,code)
     pretty_print(ast)
 
     # #semantic analysis

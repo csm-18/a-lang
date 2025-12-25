@@ -1,23 +1,70 @@
 # parsing (AST creation) for a-lang
 
 from enum import Enum
-from lexer import Token, TokenType
+from lexer import Token, TokenType, line_col_from_index
+import sys
 
-def parser(tokens):
+def parser(tokens,code):
     ast = RootNode()
 
     ast_children = []
     x = 0
     while x < len(tokens):
-        if tokens[x].type == TokenType.Keyword and tokens[x].value == "use" and x+2 < len(tokens) and tokens[x+1].type == TokenType.Identifier and tokens[x+2].type == TokenType.Semicolon:
-            import_node = ImportStatementNode(tokens[x+1].value, "built-in", tokens[x].index)
-            ast_children.append(import_node)
-            x += 3
-            continue
-            
-            
+        if tokens[x].type == TokenType.Keyword and tokens[x].value == "use":
+            if x+2 < len(tokens) and tokens[x+1].type == TokenType.Identifier and tokens[x+2].type == TokenType.Semicolon:
+                import_node = ImportStatementNode(tokens[x+1].value, "built-in", tokens[x].index)
+                ast_children.append(import_node)
+                x += 3
+                continue
+            else:
+                line,col = line_col_from_index(code, tokens[x].index)
+                print(f"Error: Invalid import statement starting at line {line}, column {col}")
+                sys.exit(1) 
+        elif tokens[x].type == TokenType.Keyword and tokens[x].value == "fun":
+            if x+4 < len(tokens) and tokens[x+1].type == TokenType.Identifier and tokens[x+1].value == "main" and tokens[x+2].type == TokenType.LeftParen and tokens[x+3].type == TokenType.RightParen and tokens[x+4].type == TokenType.LeftBrace:
+                main_fun_node = MainFunctionNode([], tokens[x].index)
+                
+                main_fun_node_body = []
+                y = x + 5
+                while y < len(tokens):
+                    # look for print statements
+                    if tokens[y].type == TokenType.Identifier and tokens[y].value == "print" and y+4 < len(tokens) and tokens[y+1].type == TokenType.LeftParen and tokens[y+2].type == TokenType.StringLiteral and tokens[y+3].type == TokenType.RightParen and tokens[y+4].type == TokenType.Semicolon:
+                        print_node = PrintStatementNode(StringLiteralNode(tokens[y+2].value, tokens[y+2].index), tokens[y].index)
+                        main_fun_node_body.append(print_node)    
+                        y += 5
+                        continue
+                    elif tokens[y].type == TokenType.RightBrace:
+                        break
+                    
+                    else:
+                        line,col = line_col_from_index(code, tokens[y].index)
+                        print(f"Error: Unexpected token '{tokens[y].value}' in main function body at line {line}, column {col}")
+                        sys.exit(1)
+                    y+=1
 
-            
+                # append body to main function node
+                main_fun_node.body = main_fun_node_body
+
+                # append main function node to ast children
+                ast_children.append(main_fun_node)
+
+                # check for closing brace
+                if y < len(tokens) and tokens[y].type == TokenType.RightBrace:
+                    x = y + 1
+                    continue
+                else:
+                    line,col = line_col_from_index(code, tokens[y-1].index)
+                    print(f"Error: Missing closing brace for main function, at line {line}, column {col}")
+                    sys.exit(1)    
+            else:
+                line,col = line_col_from_index(code, tokens[x].index)
+                print(f"Error: Invalid main function declaration starting at line {line}, column {col}")
+                sys.exit(1)
+        else:
+            line,col = line_col_from_index(code, tokens[x].index)
+            print(f"Error: Unexpected token '{tokens[x].value}' at line {line}, column {col}")
+            sys.exit(1)
+                
         x += 1
 
     ast.children = ast_children
@@ -61,6 +108,26 @@ class ImportStatementNode(ASTNode):
         self.module_type = module_type
         self.start_index = start_index
 
+class MainFunctionNode(ASTNode):
+    type = "main_function"
+
+    def __init__(self, body, start_index):
+        self.body = body
+        self.start_index = start_index        
+
+class PrintStatementNode(ASTNode):
+    type = "print_statement"
+
+    def __init__(self, message, start_index):
+        self.message = message
+        self.start_index = start_index
+
+class StringLiteralNode(ASTNode):
+    type = "string_literal"
+
+    def __init__(self, value, start_index):
+        self.value = value
+        self.start_index = start_index
 
 def pretty_print(node, indent=0):
     """Recursively print AST nodes in a human-friendly tree format."""

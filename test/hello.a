@@ -2,4 +2,5 @@ use io;
 
 fun main(){
     print("hello world!"); # hello world!
+    print("hello world!"); # hello world!
 }
