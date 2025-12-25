@@ -22,10 +22,11 @@ def compile(filename):
     # pretty_print(ast)
 
     #semantic analysis
-    semantic_analyzer(ast,code)
+    symbol_table = semantic_analyzer(ast,code)
 
-    # #code generation
-    # output_c_code = code_gen(ast)
+    #code generation
+    output_c_code = code_gen(ast,symbol_table)
+    print(output_c_code)
 
     # #create output c file
     # output_c_filename = filename[:-1] + "c"

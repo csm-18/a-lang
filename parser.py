@@ -122,6 +122,7 @@ class MainFunctionNode(ASTNode):
 
 class PrintStatementNode(ASTNode):
     type: 'NodeType'
+    message: 'StringLiteralNode'
 
     def __init__(self,type, message, start_index):
         self.type = type
