@@ -1,0 +1,5 @@
+use io;
+
+fun main(){
+    print("hello world!"); # hello world!
+}
