@@ -1,4 +1,4 @@
-# entry point to c
+# entry point to a-lang compiler
 
 import sys
 from compiler import compile
