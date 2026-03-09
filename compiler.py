@@ -18,5 +18,7 @@ def compile(filename: str):
 
     #lexical analysis
     tokens = lexer.lex(src)
+    for token in tokens:
+        print("type:",token.type, "value:",token.value,"index",token.index)
 
-    print(tokens)
+    

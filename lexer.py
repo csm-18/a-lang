@@ -21,7 +21,7 @@ def lex(src):
 
     x = 0
     while x < len(src.code):
-        if src.code[x] == "#":
+        if src.code[x] == "#": #ignore comments
             newline = False
             y = x+1
             while y < len(src.code):
@@ -34,7 +34,22 @@ def lex(src):
                 x = y
                 continue
             else:
-                break    
-        x+=1
+                break
+        elif src.code[x] == "\n" or src.code[x] == " ": #ignore whitespace and newline
+            x+=1
+            continue
+        elif src.code[x] == "(":
+            tokens.append(Token(token_types["left_paren"],"(",x))
+        elif src.code[x] == ")":
+            tokens.append(Token(token_types["right_paren"],")",x))
+        elif src.code[x] == "{":
+            tokens.append(Token(token_types["left_brace"],"{",x))
+        elif src.code[x] == "}":
+            tokens.append(Token(token_types["right_brace"],"}",x))
+        elif src.code[x] == ";":
+            tokens.append(Token(token_types["semicolon"],";",x))
+
+
+        x+=1 
 
     return tokens    
