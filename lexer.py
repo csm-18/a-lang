@@ -17,4 +17,24 @@ class Token:
         self.index = index
 
 def lex(src):
-    pass
+    tokens = []
+
+    x = 0
+    while x < len(src.code):
+        if src.code[x] == "#":
+            newline = False
+            y = x+1
+            while y < len(src.code):
+                if src.code[y] == "\n":
+                    newline = True
+                    break
+                y +=1 
+
+            if newline:
+                x = y
+                continue
+            else:
+                break    
+        x+=1
+
+    return tokens    

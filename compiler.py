@@ -17,4 +17,6 @@ def compile(filename: str):
         print("error: Unable to read file",filename)        
 
     #lexical analysis
-    lexer.lex(src)
+    tokens = lexer.lex(src)
+
+    print(tokens)
