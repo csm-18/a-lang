@@ -1,10 +1,20 @@
+
+class SourceFile:
+    def __init__(self,filename,code):
+        self.filename = filename
+        self.code = code
+
 def compile(filename: str):
-    code = "" 
+    #to store source file
+    src = SourceFile(filename=filename, code="")
+
     #read .a source file to string
     try:
         with open(filename, "r") as f:
-            code = f.read()
+            src.code = f.read()
     except:
         print("error: Unable to read file",filename)        
 
-    print(code)    
+    print("filename:",src.filename)
+    print("code: ")
+    print(src.code)        
