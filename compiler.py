@@ -1,3 +1,4 @@
+import lexer
 
 class SourceFile:
     def __init__(self,filename,code):
@@ -15,6 +16,5 @@ def compile(filename: str):
     except:
         print("error: Unable to read file",filename)        
 
-    print("filename:",src.filename)
-    print("code: ")
-    print(src.code)        
+    #lexical analysis
+    lexer.lex(src)
