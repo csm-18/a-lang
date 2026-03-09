@@ -1,6 +1,0 @@
-use io;
-
-fun main(){
-    print(2.3);
-    print(2);
-}
