@@ -1,3 +1,5 @@
+from helper_functions import print_error
+
 token_types = {
     "keyword":"keyword",
     "identifier": "identifier",
@@ -35,6 +37,26 @@ def lex(src):
                 continue
             else:
                 break
+        elif src.code[x] == '"': #string literal
+            end_quote = False
+            y = x+1
+
+            while y < len(src.code):
+                if src.code[y] == '"' and src.code[y-1] != '\\':
+                    end_quote = True
+                    break
+                elif src.code[y] == '"' and src.code[y-1] == '\\':
+                    if y-2 >= 0 and src.code[y-2] == '\\':
+                        end_quote = True
+                        break        
+                y +=1
+
+            if end_quote:
+                tokens.append(Token(token_types["string_literal"],src.code[x+1:y],x))
+                x = y+1
+                continue
+            else:
+                print_error("Unterminated string literal",x,src)
         elif src.code[x] == "\n" or src.code[x] == " ": #ignore whitespace and newline
             x+=1
             continue
