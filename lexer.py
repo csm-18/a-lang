@@ -1,5 +1,7 @@
 from helper_functions import print_error
 
+keywords = ["fun"]
+
 token_types = {
     "keyword":"keyword",
     "identifier": "identifier",
@@ -70,7 +72,22 @@ def lex(src):
             tokens.append(Token(token_types["right_brace"],"}",x))
         elif src.code[x] == ";":
             tokens.append(Token(token_types["semicolon"],";",x))
+        elif src.code[x].isalpha() or src.code[x] == '_': #keyword or identifier
+            identifier = ""
 
+            y = x
+            while y < len(src.code) and src.code[y].isalnum() or src.code[y] == "_":
+                identifier += src.code[y]
+                y +=1
+
+            if identifier in keywords:
+                tokens.append(Token(token_types["keyword"],identifier,x))
+            else:
+                tokens.append(Token(token_types["identifier"],identifier,x))
+            x = y
+            continue
+        else:
+            print_error("Unexpected character",x,src)
 
         x+=1 
 
