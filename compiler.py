@@ -1,4 +1,5 @@
 import lexer
+import parser
 
 class SourceFile:
     def __init__(self,filename,code):
@@ -18,7 +19,11 @@ def compile(filename: str):
 
     #lexical analysis
     tokens = lexer.lex(src)
-    for token in tokens:
-        print("type:",token.type, "value:",token.value,"index",token.index)
+    # for token in tokens:
+        # print("type:",token.type, "value:",token.value,"index",token.index)
+
+    #syntax analysis and ast generation
+    ast = parser.parse(tokens,src)
+    
 
     
