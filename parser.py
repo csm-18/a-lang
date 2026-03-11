@@ -68,6 +68,19 @@ def parse_function_def(x,tokens,src):
         print_error("Expected '{' at the beginning of function body",tokens[x].index,src)
 
     # to-do: parse function body
+    y = x
+    while y < len(tokens):
+        if y+1 < len(tokens) and tokens[y].type == "identifier" and tokens[y+1].type == "left_paren":
+            # function call
+            func_call_node, y = parse_function_call(y,tokens,src)
+            func_def_node.body.append(func_call_node)
+            continue
+        elif tokens[y].type == "left_brace":
+            x = y
+            break
+        else:
+            print_error("Unexpected token in function body",tokens[y].index,src)
+        y+=1
 
     if x < len(tokens) and tokens[x].type == "right_brace":
         x+=1
