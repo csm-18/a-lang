@@ -35,7 +35,12 @@ class StringLiteralNode(Node):
         self.value = value
         self.index = index    
 
-class IntegerLiteralNode(Node):
+class NumberLiteralNode(Node):
+    def __init__(self, value,index):
+        self.value = value
+        self.index = index
+
+class BooleanLiteralNode(Node):
     def __init__(self, value,index):
         self.value = value
         self.index = index
