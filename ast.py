@@ -7,10 +7,6 @@ class ProgramNode(Node):
         self.program_name = program_name
         self.body = body
 
-class SourceFileNode(Node):
-    def __init__(self, filename, body):
-        self.filename = filename
-        self.body = body
 
 class FunctionDefNode(Node):
     def __init__(self, name, params, block, index):
