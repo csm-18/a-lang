@@ -3,10 +3,14 @@ class Node:
         pass
 
 class ProgramNode(Node):
-    def __init__(self,program_name, body):
+    def __init__(self,program_name, src_file_nodes):
         self.program_name = program_name
-        self.body = body
+        self.src_file_nodes = src_file_nodes
 
+class SourceFileNode(Node):
+    def __init__(self, name, body):
+        self.name = name
+        self.body = body
 
 class FunctionDefNode(Node):
     def __init__(self, name, params, block, index):
