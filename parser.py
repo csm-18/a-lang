@@ -74,9 +74,9 @@ def parse_function_call_stmt(index,tokens,src):
         if tokens[x].type == "string_literal":
             string_literal_node = StringLiteralNode(value=tokens[x].value,index=tokens[x].index)
             func_call_stmt_node.args.append(string_literal_node)
-        elif tokens[x].type == "integer_literal":
-            integer_literal_node = NumberLiteralNode(value=int(tokens[x].value),index=tokens[x].index)
-            func_call_stmt_node.args.append(integer_literal_node)
+        elif tokens[x].type == "number_literal":
+            number_literal_node = NumberLiteralNode(value=tokens[x].value,index=tokens[x].index)
+            func_call_stmt_node.args.append(number_literal_node)
         elif tokens[x].type == "boolean_literal":
             boolean_literal_node = BooleanLiteralNode(value=tokens[x].value,index=tokens[x].index)
             func_call_stmt_node.args.append(boolean_literal_node)

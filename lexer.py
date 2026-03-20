@@ -75,7 +75,24 @@ def lex(src):
         elif src.txt[x] == ";":
             tokens.append(Token(token_types["semicolon"],";",x))
         elif src.txt[x] == ",":
-            tokens.append(Token(token_types["comma"],",",x))    
+            tokens.append(Token(token_types["comma"],",",x))
+        elif src.txt[x].isdigit(): #number literal
+            number = ""
+
+            y = x
+            while y < len(src.txt) and src.txt[y].isdigit() or src.txt[y] == ".":
+                number += src.txt[y]
+                y +=1
+
+            if number.count(".") > 1:
+                print_error("Invalid number literal",x,src)
+            elif number.startswith(".") or number.endswith("."):
+                print_error("Invalid number literal",x,src)
+                       
+
+            tokens.append(Token(token_types["number_literal"],number,x))
+            x = y
+            continue        
         elif src.txt[x].isalpha() or src.txt[x] == '_': #keyword or identifier
             identifier = ""
 

@@ -1,0 +1,7 @@
+fun main(){
+    #print(2.3);
+    #print(2);
+    print(true);
+    print(false);
+    print("hello!");
+}
