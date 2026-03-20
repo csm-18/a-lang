@@ -1,6 +1,7 @@
 from lexer import lex
 from parser import parse
 from helper_functions import read_file
+from helper_functions import pretty_print_ast
 
 
 
@@ -27,3 +28,5 @@ def compile(filename):
 def stage1(src_file):
     tokens = lex(src_file)
     ast = parse(tokens,src_file)
+    #debug print
+    pretty_print_ast(ast)

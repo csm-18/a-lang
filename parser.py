@@ -1,5 +1,5 @@
 from helper_functions import print_error
-from ast import SourceFileNode, FunctionDefNode, BlockNode, FunctionCallStmtNode, FunctionCallExprNode, StringLiteralNode, IntegerLiteralNode, BooleanLiteralNode
+from ast import SourceFileNode, FunctionDefNode, BlockNode, FunctionCallStmtNode, StringLiteralNode, NumberLiteralNode, BooleanLiteralNode
 
 from rough import parse_function_def
 
@@ -20,7 +20,7 @@ def parse(tokens,src):
 
 def parse_function_def(index,tokens,src):
     x = index+1
-    func_def_node = FunctionDefNode(name="",params=[],body=None,index=tokens[index].index)
+    func_def_node = FunctionDefNode(name="",params=[],block=None,index=tokens[index].index)
     
     if x+1 < len(tokens) and tokens[x].type == "identifier" and tokens[x+1].type == "left_paren":
         func_def_node.name = tokens[x].value
@@ -43,10 +43,6 @@ def parse_function_def(index,tokens,src):
     else:
         print_error("Expected function body",tokens[index].index,src)
 
-    if x < len(tokens) and tokens[x].type == "right_brace":
-        x = x+1
-    else:
-        print_error("Expected closing brace",tokens[index].index,src)
 
     return func_def_node,x    
 
@@ -70,7 +66,7 @@ def parse_block(index,tokens,src):
     return block_node,x
 
 def parse_function_call_stmt(index,tokens,src):
-    func_call_stmt_node = FunctionCallStmtNode(name="",args=[],index=tokens[index].index)
+    func_call_stmt_node = FunctionCallStmtNode(name=tokens[index].value,args=[],index=tokens[index].index)
     x = index+2
 
     # TODO: parse function call arguments
@@ -79,13 +75,13 @@ def parse_function_call_stmt(index,tokens,src):
             string_literal_node = StringLiteralNode(value=tokens[x].value,index=tokens[x].index)
             func_call_stmt_node.args.append(string_literal_node)
         elif tokens[x].type == "integer_literal":
-            integer_literal_node = IntegerLiteralNode(value=int(tokens[x].value),index=tokens[x].index)
+            integer_literal_node = NumberLiteralNode(value=int(tokens[x].value),index=tokens[x].index)
             func_call_stmt_node.args.append(integer_literal_node)
         elif tokens[x].type == "boolean_literal":
             boolean_literal_node = BooleanLiteralNode(value=tokens[x].value,index=tokens[x].index)
             func_call_stmt_node.args.append(boolean_literal_node)
         elif tokens[x].type == "identifier":
-            pass
+            pass # TODO: handle identifier arguments (variables, function calls, etc.)
         elif tokens[x].type == "comma":
             if x == index+2:
                 print_error("Unexpected comma in function call arguments",tokens[x].index,src)
