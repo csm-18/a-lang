@@ -34,7 +34,9 @@ def parse_function_def(index,tokens,src):
         print_error("Expected function name and parameter list",tokens[index].index,src)
 
     if x < len(tokens) and tokens[x].type == "left_brace":
-        pass # TODO: parse function body
+        block_node, new_index = parse_block(x,tokens,src)
+        func_def_node.body = block_node
+        x = new_index
     else:
         print_error("Expected function body",tokens[index].index,src)
 
@@ -44,3 +46,22 @@ def parse_function_def(index,tokens,src):
         print_error("Expected closing brace",tokens[index].index,src)
 
     return func_def_node,x    
+
+def parse_block(index,tokens,src):
+    block_node = BlockNode(statements=[],index=tokens[index].index)
+    x = index+1
+    while x < len(tokens):
+        if tokens[x].type == "identifier" and x+1 < len(tokens) and tokens[x+1].type == "left_paren":
+            pass # TODO: parse function call statement
+        elif tokens[x].type == "right_brace":
+            x = x+1
+            break
+        else:
+            print_error("Unexpected token in block",tokens[x].index,src)
+        x+=1
+
+
+    return block_node,x
+
+def parse_function_call_stmt(index,tokens,src):
+    pass    
