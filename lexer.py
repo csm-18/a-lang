@@ -7,11 +7,13 @@ token_types = {
     "identifier": "identifier",
     "string_literal": "string_literal",
     "number_literal": "number_literal",
+    "boolean_literal": "boolean_literal",
     "left_paren": "left_paren",
     "right_paren": "right_paren",
     "left_brace": "left_brace",
     "right_brace": "right_brace",
-    "semicolon": "semicolon"
+    "semicolon": "semicolon",
+    "comma": "comma"
 }
 
 class Token:
@@ -72,6 +74,8 @@ def lex(src):
             tokens.append(Token(token_types["right_brace"],"}",x))
         elif src.txt[x] == ";":
             tokens.append(Token(token_types["semicolon"],";",x))
+        elif src.txt[x] == ",":
+            tokens.append(Token(token_types["comma"],",",x))    
         elif src.txt[x].isalpha() or src.txt[x] == '_': #keyword or identifier
             identifier = ""
 
@@ -80,7 +84,9 @@ def lex(src):
                 identifier += src.txt[y]
                 y +=1
 
-            if identifier in keywords:
+            if identifier == "true" or identifier == "false":
+                tokens.append(Token(token_types["boolean_literal"],identifier,x))
+            elif identifier in keywords:
                 tokens.append(Token(token_types["keyword"],identifier,x))
             else:
                 tokens.append(Token(token_types["identifier"],identifier,x))

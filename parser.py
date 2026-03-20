@@ -33,6 +33,9 @@ def parse_function_def(index,tokens,src):
     else:
         print_error("Expected function name and parameter list",tokens[index].index,src)
 
+    
+    # TODO: parse return type annotation
+    
     if x < len(tokens) and tokens[x].type == "left_brace":
         block_node, new_index = parse_block(x,tokens,src)
         func_def_node.body = block_node
@@ -68,6 +71,24 @@ def parse_function_call_stmt(index,tokens,src):
     x = index+2
 
     # TODO: parse function call arguments
+    while x < len(tokens):
+        if tokens[x].type == "string_literal":
+            pass
+        elif tokens[x].type == "integer_literal":
+            pass
+        elif tokens[x].type == "boolean_literal":
+            pass
+        elif tokens[x].type == "identifier":
+            pass
+        elif tokens[x].type == "comma":
+            if x == index+2:
+                print_error("Unexpected comma in function call arguments",tokens[x].index,src)
+        elif tokens[x].type == "right_paren":
+            break
+        else:
+            print_error("Unexpected token in function call arguments",tokens[x].index,src)
+
+        x+=1
 
     if x < len(tokens) and tokens[x].type == "right_paren":
         x = x+1
