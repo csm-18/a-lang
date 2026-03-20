@@ -13,8 +13,25 @@ def line_pos_from_index(code,index):
 
     return line,pos
 
+
+class File:
+    def __init__(self,name,txt):
+        self.name = name
+        self.txt = txt
+
+
+def read_file(filename):
+    name = filename
+    txt = ""
+    try:
+        with open(filename, "r") as f:
+            txt = f.read()
+    except:
+        print("error: Unable to read file",filename)
+        sys.exit(1)
+    return File(name,txt)
 def print_error(msg,index,src):
-    line,pos = line_pos_from_index(src.code,index)
+    line,pos = line_pos_from_index(src.txt,index)
     print("error:",msg)
-    print(f" -->({src.filename})[{line}:{pos}]")
+    print(f" -->({src.name})[{line}:{pos}]")
     sys.exit(1)

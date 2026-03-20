@@ -24,12 +24,12 @@ def lex(src):
     tokens = []
 
     x = 0
-    while x < len(src.code):
-        if src.code[x] == "#": #ignore comments
+    while x < len(src.txt):
+        if src.txt[x] == "#": #ignore comments
             newline = False
             y = x+1
-            while y < len(src.code):
-                if src.code[y] == "\n":
+            while y < len(src.txt):
+                if src.txt[y] == "\n":
                     newline = True
                     break
                 y +=1 
@@ -39,45 +39,45 @@ def lex(src):
                 continue
             else:
                 break
-        elif src.code[x] == '"': #string literal
+        elif src.txt[x] == '"': #string literal
             end_quote = False
             y = x+1
 
-            while y < len(src.code):
-                if src.code[y] == '"' and src.code[y-1] != '\\':
+            while y < len(src.txt):
+                if src.txt[y] == '"' and src.txt[y-1] != '\\':
                     end_quote = True
                     break
-                elif src.code[y] == '"' and src.code[y-1] == '\\':
-                    if y-2 >= 0 and src.code[y-2] == '\\':
+                elif src.txt[y] == '"' and src.txt[y-1] == '\\':
+                    if y-2 >= 0 and src.txt[y-2] == '\\':
                         end_quote = True
                         break        
                 y +=1
 
             if end_quote:
-                tokens.append(Token(token_types["string_literal"],src.code[x+1:y],x))
+                tokens.append(Token(token_types["string_literal"],src.txt[x+1:y],x))
                 x = y+1
                 continue
             else:
                 print_error("Unterminated string literal",x,src)
-        elif src.code[x] == "\n" or src.code[x] == " ": #ignore whitespace and newline
+        elif src.txt[x] == "\n" or src.txt[x] == " ": #ignore whitespace and newline
             x+=1
             continue
-        elif src.code[x] == "(":
+        elif src.txt[x] == "(":
             tokens.append(Token(token_types["left_paren"],"(",x))
-        elif src.code[x] == ")":
+        elif src.txt[x] == ")":
             tokens.append(Token(token_types["right_paren"],")",x))
-        elif src.code[x] == "{":
+        elif src.txt[x] == "{":
             tokens.append(Token(token_types["left_brace"],"{",x))
-        elif src.code[x] == "}":
+        elif src.txt[x] == "}":
             tokens.append(Token(token_types["right_brace"],"}",x))
-        elif src.code[x] == ";":
+        elif src.txt[x] == ";":
             tokens.append(Token(token_types["semicolon"],";",x))
-        elif src.code[x].isalpha() or src.code[x] == '_': #keyword or identifier
+        elif src.txt[x].isalpha() or src.txt[x] == '_': #keyword or identifier
             identifier = ""
 
             y = x
-            while y < len(src.code) and src.code[y].isalnum() or src.code[y] == "_":
-                identifier += src.code[y]
+            while y < len(src.txt) and src.txt[y].isalnum() or src.txt[y] == "_":
+                identifier += src.txt[y]
                 y +=1
 
             if identifier in keywords:

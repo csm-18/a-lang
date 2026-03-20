@@ -1,5 +1,5 @@
 import sys
-import compiler
+from compiler import compile
 
 # a compiler version
 VERSION = "a 0.1.0"
@@ -24,8 +24,7 @@ def main():
             print(" 3. a help|-h       -> print compiler commands list")
             print(" 4. a <filename.a>  -> compile .a file to binary")
         elif len(args[0]) > 2 and args[0].endswith(".a"):
-            #compile .a source file
-            compiler.compile(args[0])
+            compile(args[0])
             
 if __name__ == "__main__":
     main()
