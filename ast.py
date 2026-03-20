@@ -7,6 +7,12 @@ class ProgramNode(Node):
         self.program_name = program_name
         self.src_file_nodes = src_file_nodes
 
+class ImportStmtNode(Node):
+    def __init__(self, filename,index,is_stdlib_import):
+        self.filename = filename
+        self.index = index
+        self.is_stdlib_import = is_stdlib_import
+
 class SourceFileNode(Node):
     def __init__(self, name, body):
         self.name = name

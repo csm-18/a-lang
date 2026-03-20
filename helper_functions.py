@@ -110,6 +110,6 @@ def pretty_print_ast(node, out=None):
 
     This supports all node types (ProgramNode, SourceFileNode, FunctionDefNode,
     BlockNode, FunctionCallStmtNode, StringLiteralNode, NumberLiteralNode,
-    BooleanLiteralNode, etc.) and nested structures.
+    BooleanLiteralNode, ImportStmtNode, etc.) and nested structures.
     """
     _pretty_print_ast(node, indent=0, out=out)

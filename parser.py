@@ -1,14 +1,27 @@
 from helper_functions import print_error
-from ast import SourceFileNode, FunctionDefNode, BlockNode, FunctionCallStmtNode, StringLiteralNode, NumberLiteralNode, BooleanLiteralNode
+from ast import SourceFileNode, FunctionDefNode, BlockNode, FunctionCallStmtNode, StringLiteralNode, NumberLiteralNode, BooleanLiteralNode, ImportStmtNode
 
-from rough import parse_function_def
 
 def parse(tokens,src):
     ast = SourceFileNode(name=src.name,body=[])
 
     x = 0
     while x < len(tokens):
-        if tokens[x].type == "keyword" and tokens[x].value == "fun":
+        if tokens[x].type == "keyword" and tokens[x].value == "import":
+            if x+2 < len(tokens) and (tokens[x+1].type == "identifier" or tokens[x+1].type == "string_literal") and tokens[x+2].type == "semicolon":
+                if tokens[x+1].type == "identifier":
+                    import_node = ImportStmtNode(filename=tokens[x+1].value,index=tokens[x].index,is_stdlib_import=True)
+                    ast.body.append(import_node)
+                    x = x+3
+                    continue
+                elif tokens[x+1].type == "string_literal":
+                    import_node = ImportStmtNode(filename=tokens[x+1].value,index=tokens[x].index,is_stdlib_import=False)
+                    ast.body.append(import_node)
+                    x = x+3
+                    continue
+            else:
+                print_error("Invalid import statement syntax",tokens[x].index,src)    
+        elif tokens[x].type == "keyword" and tokens[x].value == "fun":
             func_def_node, new_index = parse_function_def(x,tokens,src)
             ast.body.append(func_def_node)
             x = new_index

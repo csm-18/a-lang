@@ -1,6 +1,6 @@
 from helper_functions import print_error
 
-keywords = ["fun"]
+keywords = ["fun","import"]
 
 token_types = {
     "keyword":"keyword",
