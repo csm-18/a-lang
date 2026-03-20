@@ -64,4 +64,20 @@ def parse_block(index,tokens,src):
     return block_node,x
 
 def parse_function_call_stmt(index,tokens,src):
-    pass    
+    func_call_stmt_node = FunctionCallStmtNode(name="",args=[],index=tokens[index].index)
+    x = index+2
+
+    # TODO: parse function call arguments
+
+    if x < len(tokens) and tokens[x].type == "right_paren":
+        x = x+1
+    else:
+        print_error("Expected closing parenthesis in function call",tokens[index].index,src)
+
+    if x < len(tokens) and tokens[x].type == "semicolon":
+        x = x+1
+    else:
+        print_error("Expected semicolon after function call",tokens[index].index,src)    
+
+
+    return func_call_stmt_node,x     
