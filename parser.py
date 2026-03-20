@@ -1,5 +1,5 @@
 from helper_functions import print_error
-from ast import SourceFileNode, FunctionDefNode, BlockNode, FunctionCallStmtNode, FunctionCallExprNode, StringLiteralNode, IntegerLiteralNode
+from ast import SourceFileNode, FunctionDefNode, BlockNode, FunctionCallStmtNode, FunctionCallExprNode, StringLiteralNode, IntegerLiteralNode, BooleanLiteralNode
 
 from rough import parse_function_def
 
@@ -55,7 +55,10 @@ def parse_block(index,tokens,src):
     x = index+1
     while x < len(tokens):
         if tokens[x].type == "identifier" and x+1 < len(tokens) and tokens[x+1].type == "left_paren":
-            pass # TODO: parse function call statement
+            func_call_stmt_node, new_index = parse_function_call_stmt(x,tokens,src)
+            block_node.statements.append(func_call_stmt_node)
+            x = new_index
+            continue
         elif tokens[x].type == "right_brace":
             x = x+1
             break
@@ -73,11 +76,14 @@ def parse_function_call_stmt(index,tokens,src):
     # TODO: parse function call arguments
     while x < len(tokens):
         if tokens[x].type == "string_literal":
-            pass
+            string_literal_node = StringLiteralNode(value=tokens[x].value,index=tokens[x].index)
+            func_call_stmt_node.args.append(string_literal_node)
         elif tokens[x].type == "integer_literal":
-            pass
+            integer_literal_node = IntegerLiteralNode(value=int(tokens[x].value),index=tokens[x].index)
+            func_call_stmt_node.args.append(integer_literal_node)
         elif tokens[x].type == "boolean_literal":
-            pass
+            boolean_literal_node = BooleanLiteralNode(value=tokens[x].value,index=tokens[x].index)
+            func_call_stmt_node.args.append(boolean_literal_node)
         elif tokens[x].type == "identifier":
             pass
         elif tokens[x].type == "comma":
