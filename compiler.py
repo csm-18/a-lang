@@ -1,9 +1,11 @@
+
+
 from lexer import lex
 from parser import parse
 from helper_functions import read_file
 from helper_functions import pretty_print_ast
 from ast import ImportStmtNode
-
+from helper_functions import resolve_import_path
 
 
 class ParsedFile:
@@ -14,7 +16,9 @@ class ParsedFile:
 
 def compile(filename):
     parsed_files = []
-    src_filenames = [filename]
+    src_filenames = []
+
+    src_filenames.append(resolve_import_path(__file__,filename))
 
     #parse all the files and their imports            
     while len(src_filenames) != 0:
@@ -26,7 +30,7 @@ def compile(filename):
                     continue
                 else:
                     if import_stmt.filename not in src_filenames:
-                        src_filenames.append(import_stmt.filename)
+                        src_filenames.append(resolve_import_path(parsed_file.name,import_stmt.filename))
         parsed_files.append(parsed_file)    
 
 

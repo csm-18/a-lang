@@ -1,3 +1,4 @@
+from pathlib import Path
 import sys
 
 def line_pos_from_index(code,index):
@@ -21,7 +22,7 @@ class File:
 
 
 def read_file(filename):
-    name = filename
+    name = str(filename)
     txt = ""
     try:
         with open(filename, "r") as f:
@@ -35,6 +36,15 @@ def print_error(msg,index,src):
     print("error:",msg)
     print(f" -->({src.name})[{line}:{pos}]")
     sys.exit(1)
+
+
+def resolve_import_path(current_file, import_path):
+    current_file = Path(current_file)
+    import_path = Path(import_path)
+
+    # Resolve relative to current file's directory
+    full_path = (current_file.parent / import_path).resolve(strict=False)
+    return full_path
 
 
 ## extra helper functions
