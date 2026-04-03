@@ -1,5 +1,0 @@
-import "hello.a";
-
-fun main(){
-    hello();
-}
