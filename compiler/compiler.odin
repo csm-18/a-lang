@@ -5,7 +5,8 @@ import "core:os"
 
 compile :: proc(filename: string) {
     sourceCode := readSourceFile(filename)
-    fmt.println(sourceCode)
+    tokens := lexer(sourceCode)
+    fmt.println(tokens)
 }
 
 readSourceFile :: proc(filename: string) -> string {
