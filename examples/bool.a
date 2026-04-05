@@ -1,0 +1,4 @@
+main() do
+    print(true)
+    print(false)
+end

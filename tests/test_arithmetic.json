@@ -1,0 +1,67 @@
+[
+  {
+    "name": "Single number",
+    "source": "arithmetic/single_number.a",
+    "expected_output": "42"
+  },
+  {
+    "name": "Addition",
+    "source": "arithmetic/addition.a",
+    "expected_output": "7"
+  },
+  {
+    "name": "Subtraction",
+    "source": "arithmetic/subtraction.a",
+    "expected_output": "2"
+  },
+  {
+    "name": "Multiplication",
+    "source": "arithmetic/multiplication.a",
+    "expected_output": "20"
+  },
+  {
+    "name": "Division",
+    "source": "arithmetic/division.a",
+    "expected_output": "5"
+  },
+  {
+    "name": "Multiplication precedence over addition",
+    "source": "arithmetic/precedence_mul_add.a",
+    "expected_output": "14"
+  },
+  {
+    "name": "Addition then multiplication",
+    "source": "arithmetic/add_then_mul.a",
+    "expected_output": "20"
+  },
+  {
+    "name": "Complex expression with multiple operators",
+    "source": "arithmetic/complex_expr.a",
+    "expected_output": "11"
+  },
+  {
+    "name": "Parentheses override precedence",
+    "source": "arithmetic/parentheses_override.a",
+    "expected_output": "10"
+  },
+  {
+    "name": "Nested parentheses",
+    "source": "arithmetic/nested_parens.a",
+    "expected_output": "7"
+  },
+  {
+    "name": "Multiple operations left to right",
+    "source": "arithmetic/left_to_right.a",
+    "expected_output": "1"
+  },
+  {
+    "name": "Zero operations",
+    "source": "arithmetic/with_zero.a",
+    "expected_output": "10"
+  },
+  {
+    "name": "Large numbers",
+    "source": "arithmetic/large_numbers.a",
+    "expected_output": "1000000"
+  }
+]

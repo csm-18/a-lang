@@ -1,0 +1,4 @@
+main() do
+  print("Hello\tWorld!")
+  print("New line")
+end

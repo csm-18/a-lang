@@ -1,0 +1,27 @@
+[
+  {
+    "name": "String literal",
+    "source": "types/string_literal.a",
+    "expected_output": "Hello, World!"
+  },
+  {
+    "name": "Boolean true",
+    "source": "types/bool_true.a",
+    "expected_output": "true"
+  },
+  {
+    "name": "Boolean false",
+    "source": "types/bool_false.a",
+    "expected_output": "false"
+  },
+  {
+    "name": "Multiple strings",
+    "source": "types/multiple_strings.a",
+    "expected_output": "First\nSecond\nThird"
+  },
+  {
+    "name": "String with special characters",
+    "source": "types/string_special.a",
+    "expected_output": "Hello\\tWorld!\nNew line"
+  }
+]
