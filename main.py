@@ -8,13 +8,13 @@ COMPILER_VERSION = "0.1.0"
 def print_about():
     """Print about message for a-lang."""
     print("a-lang compiler v" + COMPILER_VERSION)
-    print("A simple programming language compiler written in Odin and Python")
+    print("A simple toy programming language and compiler written in Python")
     print()
     print_help()
 
 def print_help():
-    """Print available commands."""
-    print("Commands:")
+    """Print compiler commands."""
+    print("Compiler Commands:")
     print("  <filename.a>   Compile a-lang source file to binary")
     print("  version        Print compiler version")
     print("  help           Print this help message")
