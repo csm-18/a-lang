@@ -1,3 +1,4 @@
+import sys
 from enum import Enum
 from dataclasses import dataclass, field
 from typing import List, Optional
@@ -33,6 +34,10 @@ class Parser:
     
     def parse(self) -> AstNode:
         return self.parse_function()
+
+    def parser_error(self, message: str):
+        print(f"Syntax error: {message}")
+        sys.exit(1)
     
     def parse_function(self) -> AstNode:
         # identifier ( ) do statements end
@@ -76,28 +81,28 @@ class Parser:
     
     def parse_call(self) -> AstNode:
         if not self.current_token():
-            return AstNode(AstKind.CALL)
-        
+            self.parser_error("Unexpected end of input while parsing call")
+
         name = self.current_token().value
         self.advance()
-        
+
         if not self.current_token() or self.current_token().kind != TokenKind.LEFT_PAREN:
-            return AstNode(AstKind.CALL)
+            self.parser_error(f"Expected '(' after function name '{name}'")
         self.advance()
-        
+
         arg = self.parse_expression()
-        
+
         if not self.current_token() or self.current_token().kind != TokenKind.RIGHT_PAREN:
-            return AstNode(AstKind.CALL)
+            self.parser_error(f"Expected ')' after call to '{name}'")
         self.advance()
-        
+
         node = AstNode(kind=AstKind.CALL, value=name)
         node.children.append(arg)
         return node
-    
+
     def parse_expression(self) -> AstNode:
         left = self.parse_term()
-        
+
         while self.current_token():
             op = self.current_token()
             if op.kind not in (TokenKind.PLUS, TokenKind.MINUS):
@@ -108,12 +113,12 @@ class Parser:
             node.children.append(left)
             node.children.append(right)
             left = node
-        
+
         return left
-    
+
     def parse_term(self) -> AstNode:
         left = self.parse_factor()
-        
+
         while self.current_token():
             op = self.current_token()
             if op.kind not in (TokenKind.STAR, TokenKind.SLASH):
@@ -124,33 +129,37 @@ class Parser:
             node.children.append(left)
             node.children.append(right)
             left = node
-        
+
         return left
     
     def parse_factor(self) -> AstNode:
         if not self.current_token():
-            return AstNode(AstKind.IDENTIFIER)
-        
+            self.parser_error("Unexpected end of input; expected expression")
+
         tok = self.current_token()
-        
+
         if tok.kind == TokenKind.LEFT_PAREN:
             self.advance()
             node = self.parse_expression()
-            if self.current_token() and self.current_token().kind == TokenKind.RIGHT_PAREN:
-                self.advance()
+            if not self.current_token() or self.current_token().kind != TokenKind.RIGHT_PAREN:
+                self.parser_error("Expected ')' after expression")
+            self.advance()
             return node
-        
-        self.advance()
-        
+
         if tok.kind == TokenKind.NUMBER_LITERAL:
+            self.advance()
             return AstNode(kind=AstKind.NUMBER_LITERAL, value=tok.value)
         elif tok.kind == TokenKind.STRING_LITERAL:
+            self.advance()
             return AstNode(kind=AstKind.STRING_LITERAL, value=tok.value)
         elif tok.kind == TokenKind.BOOL_LITERAL:
+            self.advance()
             return AstNode(kind=AstKind.BOOL_LITERAL, value=tok.value)
         elif tok.kind == TokenKind.IDENTIFIER:
+            self.advance()
             return AstNode(kind=AstKind.IDENTIFIER, value=tok.value)
-        
+
+        self.parser_error(f"Unexpected token '{tok.value}' in expression")
         return AstNode(AstKind.IDENTIFIER)
 
 def parser(tokens: List[Token]) -> AstNode:
